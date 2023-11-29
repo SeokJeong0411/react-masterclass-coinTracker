@@ -100,3 +100,43 @@
         <Input />
       </>
 ```
+
+- Theme
+  테마를 적용할 수 있도록 변수를 넘겨 줄 수 있음
+
+index.js
+
+```
+    import { ThemeProvider } from "styled-components";
+
+    const darkTheme = {
+        textColor: "whitesmoke",
+        backgroundColor: "#111",
+    };
+
+    const lightTheme = {
+        textColor: "#111",
+        backgroundColor: "whitesmoke",
+    };
+
+    <ThemeProvider theme={darkTheme}>
+        <App />
+    </ThemeProvider>
+```
+
+App.js
+
+```
+    const Wrapper = styled.div`
+        display: flex;
+        height: 100vh;
+        width: 100vw;
+        justify-content: center;
+        align-items: center;
+        background-color: ${(props) => props.theme.backgroundColor};
+    `;
+
+    <Wrapper>
+        <Title>asdf</Title>
+    </Wrapper>
+```
