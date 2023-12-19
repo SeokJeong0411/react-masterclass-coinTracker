@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useLocation, useParams, Switch, Route, Link, useRouteMatch } from "react-router-dom";
 import { Helmet } from "react-helmet";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import Price from "./Price";
 import Chart from "./Chart";
 import { useQuery } from "react-query";
@@ -11,6 +11,7 @@ const Container = styled.div`
   padding: 0px 20px;
   max-width: 480px;
   margin: 0 auto;
+  position: relative;
 `;
 
 const Header = styled.header`
@@ -19,6 +20,35 @@ const Header = styled.header`
   justify-content: center;
   align-items: center;
   margin: 50px;
+`;
+
+const rotationAnimation = keyframes`
+  0% {
+    color: ${(props) => props.theme.accentColor};
+  }
+  25% {
+    color: #fd79a8;
+  }
+  50% {
+    color: #ffeaa7;
+  }
+  75% {
+    color: #a29bfe;
+  }
+  100% {
+    color: ${(props) => props.theme.accentColor};
+  }
+`;
+
+const Back = styled.a`
+  position: absolute;
+  top: -40px;
+  left: 25px;
+  color: ${(props) => props.theme.accentColor};
+
+  &:hover {
+    animation: ${rotationAnimation} 1s linear infinite;
+  }
 `;
 
 const Loader = styled.span`
@@ -181,6 +211,9 @@ function Coin() {
       <Helmet>
         <title>{state?.name ? state.name : loading ? "Loading..." : infoData?.name}</title>
       </Helmet>
+      <Back>
+        <Link to={"/"}>&lt; Back</Link>
+      </Back>
       <Header>
         <Title>{state?.name ? state.name : loading ? "Loading..." : infoData?.name}</Title>
       </Header>
