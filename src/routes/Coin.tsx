@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { useLocation, useParams, Switch, Route, Link, useRouteMatch } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import styled, { keyframes } from "styled-components";
@@ -40,7 +39,7 @@ const rotationAnimation = keyframes`
   }
 `;
 
-const Back = styled.a`
+const Back = styled.div`
   position: absolute;
   top: -40px;
   left: 25px;
@@ -93,7 +92,7 @@ const Tabs = styled.div`
   gap: 10px;
 `;
 
-const Tab = styled.span<{ isActive: boolean }>`
+const Tab = styled.span<{ $isActive: boolean }>`
   text-align: center;
   text-transform: uppercase;
   font-size: 12px;
@@ -101,7 +100,7 @@ const Tab = styled.span<{ isActive: boolean }>`
   background-color: rgba(0, 0, 0, 0.5);
   padding: 7px 0px;
   border-radius: 10px;
-  color: ${(props) => (props.isActive ? props.theme.accentColor : props.theme.textColor)};
+  color: ${(props) => (props.$isActive ? props.theme.accentColor : props.theme.textColor)};
   a {
     display: block;
   }
@@ -248,10 +247,10 @@ function Coin() {
           </Overview>
 
           <Tabs>
-            <Tab isActive={chartMatch !== null}>
+            <Tab $isActive={chartMatch !== null}>
               <Link to={`/${coinId}/chart`}>Chart</Link>
             </Tab>
-            <Tab isActive={priceMatch !== null}>
+            <Tab $isActive={priceMatch !== null}>
               <Link to={`/${coinId}/price`}>Price</Link>
             </Tab>
           </Tabs>
