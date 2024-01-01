@@ -3,6 +3,8 @@ import { fetchCoinHistory } from "../api";
 import ApexChart from "react-apexcharts";
 import { useState } from "react";
 import styled from "styled-components";
+import { useRecoilValue } from "recoil";
+import { isDarkAtom } from "../atoms";
 
 const ChartBox = styled.div``;
 
@@ -52,6 +54,8 @@ function Chart({ coinId }: ICharProps) {
   });
 
   const [chartType, setChartType] = useState("line");
+
+  const isDark = useRecoilValue(isDarkAtom);
 
   var onClickCandleButton = () => {
     setChartType("candlestick");
@@ -108,7 +112,7 @@ function Chart({ coinId }: ICharProps) {
               type="line"
               series={[{ name: "price", data: data?.map((price) => Number(price.close)) ?? [] }]}
               options={{
-                theme: { mode: "dark" },
+                theme: { mode: isDark ? "dark" : "light" },
                 chart: { height: 500, width: 500, toolbar: { show: false }, background: "transparent" },
                 grid: { show: false },
                 xaxis: {
@@ -139,7 +143,7 @@ function Chart({ coinId }: ICharProps) {
                 },
               ]}
               options={{
-                theme: { mode: "dark" },
+                theme: { mode: isDark ? "dark" : "light" },
                 chart: { height: 500, width: 500, toolbar: { show: false }, background: "transparent" },
                 grid: { show: false },
                 xaxis: {
