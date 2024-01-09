@@ -9,8 +9,11 @@ import { fetchCoinInfo, fetchCoinTickers } from "../api";
 const Container = styled.div`
   padding: 0px 20px;
   max-width: 480px;
+  height: 100vh;
   margin: 0 auto;
   position: relative;
+  display: flex;
+  flex-direction: column;
 `;
 
 const Header = styled.header`
@@ -19,6 +22,7 @@ const Header = styled.header`
   justify-content: center;
   align-items: center;
   margin: 50px;
+  flex-shrink: 0;
 `;
 
 const rotationAnimation = keyframes`
@@ -41,8 +45,9 @@ const rotationAnimation = keyframes`
 
 const Back = styled.div`
   position: absolute;
-  top: -40px;
-  left: 25px;
+  top: 0px;
+  left: 20px;
+  padding: 5px;
   color: ${(props) => props.theme.accentColor};
 
   &:hover {
@@ -63,7 +68,7 @@ const Title = styled.h1`
 const Overview = styled.div`
   display: flex;
   justify-content: space-between;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: ${(props) => props.theme.boxColor};
   padding: 10px 20px;
   border-radius: 10px;
 `;
@@ -83,6 +88,11 @@ const OverviewItem = styled.div`
 
 const Description = styled.p`
   margin: 20px 0px;
+  line-height: 103%;
+`;
+
+const TabContents = styled.div`
+  padding-bottom: 20px;
 `;
 
 const Tabs = styled.div`
@@ -97,7 +107,7 @@ const Tab = styled.span<{ $isActive: boolean }>`
   text-transform: uppercase;
   font-size: 12px;
   font-weight: 400;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: ${(props) => props.theme.boxColor};
   padding: 7px 0px;
   border-radius: 10px;
   color: ${(props) => (props.$isActive ? props.theme.accentColor : props.theme.textColor)};
@@ -112,6 +122,7 @@ interface RouteParams {
 
 interface RouteState {
   name: string;
+  symbol: string;
 }
 
 interface IInfoData {
@@ -209,6 +220,18 @@ function Coin() {
     <Container>
       <Helmet>
         <title>{state?.name ? state.name : loading ? "Loading..." : infoData?.name}</title>
+        <link
+          rel="icon"
+          type="image/png"
+          href={
+            state?.symbol
+              ? `https://coinicons-api.vercel.app/api/icon/${state?.symbol}`
+              : loading
+              ? ""
+              : `https://coinicons-api.vercel.app/api/icon/${infoData?.symbol.toLowerCase()}`
+          }
+          sizes="16x16"
+        ></link>
       </Helmet>
       <Back>
         <Link to={"/"}>&lt; Back</Link>
@@ -255,14 +278,16 @@ function Coin() {
             </Tab>
           </Tabs>
 
-          <Switch>
-            <Route path={`/:coinId/chart`}>
-              <Chart coinId={coinId} />
-            </Route>
-            <Route path={`/:coinId/price`}>
-              <Price />
-            </Route>
-          </Switch>
+          <TabContents>
+            <Switch>
+              <Route path={`/:coinId/chart`}>
+                <Chart coinId={coinId} />
+              </Route>
+              <Route path={`/:coinId/price`}>
+                <Price coinId={coinId} />
+              </Route>
+            </Switch>
+          </TabContents>
         </>
       )}
     </Container>

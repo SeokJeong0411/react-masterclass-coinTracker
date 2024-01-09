@@ -3,13 +3,14 @@ import { Helmet } from "react-helmet";
 import { useQuery } from "react-query";
 import styled from "styled-components";
 import { fetchCoins } from "../api";
-import { useSetRecoilState } from "recoil";
-import { isDarkAtom } from "../atoms";
 
 const Container = styled.div`
   padding: 0px 20px;
   max-width: 480px;
+  height: 100vh;
   margin: 0 auto;
+  display: flex;
+  flex-direction: column;
 `;
 
 const Header = styled.header`
@@ -25,16 +26,23 @@ const Loader = styled.span`
   display: block;
 `;
 
-const CoinsList = styled.ul``;
+const CoinsList = styled.ul`
+  overflow-y: scroll;
+  flex-grow: 1;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+`;
 
 const Coin = styled.li`
-  background-color: white;
+  background-color: ${(props) => props.theme.boxColor};
   color: ${(props) => props.theme.textColor};
   border-radius: 15px;
   margin-bottom: 10px;
 
   a {
-    transition: color 0.2s ease-in-out;
+    transition: all 0.2s ease-in-out;
     display: flex;
     align-items: center;
     padding: 20px;
@@ -43,6 +51,7 @@ const Coin = styled.li`
   &:hover {
     a {
       color: ${(props) => props.theme.accentColor};
+      font-size: 16.5px;
     }
   }
 `;
@@ -70,8 +79,6 @@ interface ICoin {
 
 function Coins() {
   const { isLoading, data } = useQuery<ICoin[]>("allCoins", fetchCoins);
-  const setterFn = useSetRecoilState(isDarkAtom);
-  const toggleDarkAtom = () => setterFn((prev) => !prev);
 
   // const [coins, setCoins] = useState<CoinInterface[]>([]);
   // const [loading, setLoading] = useState(true);
@@ -88,11 +95,11 @@ function Coins() {
   return (
     <Container>
       <Helmet>
-        <title>코인</title>
+        <title>Coins</title>
+        <link rel="icon" href="/favicon.ico" data-react-helmet="true" />
       </Helmet>
       <Header>
-        <Title>코인</Title>
-        <button onClick={toggleDarkAtom}>Toggle Mode</button>
+        <Title>Coins</Title>
       </Header>
       {isLoading ? (
         <Loader>"Loading..."</Loader>
@@ -103,7 +110,7 @@ function Coins() {
               <Link
                 to={{
                   pathname: `/${coin.id}/chart`,
-                  state: { name: coin.name },
+                  state: { name: coin.name, symbol: coin.symbol.toLowerCase() },
                 }}
               >
                 <CoinIcon src={`https://coinicons-api.vercel.app/api/icon/${coin.symbol.toLowerCase()}`} />

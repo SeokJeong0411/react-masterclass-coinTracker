@@ -6,10 +6,14 @@ import styled from "styled-components";
 import { useRecoilValue } from "recoil";
 import { isDarkAtom } from "../atoms";
 
-const ChartBox = styled.div``;
+const ChartBox = styled.div`
+  border: 2px solid ${(props) => props.theme.boxColor};
+  border-radius: 10px;
+`;
 
 const ButtonBox = styled.div`
   *zoom: 1;
+  margin: 5px;
   &::before {
     content: "";
     display: block;
@@ -46,6 +50,18 @@ interface IHistorical {
   close: string;
   volume: string;
   market_cap: number;
+}
+
+function formatDate(date: Date) {
+  var d = new Date(date),
+    month = "" + (d.getMonth() + 1),
+    day = "" + d.getDate(),
+    year = d.getFullYear();
+
+  if (month.length < 2) month = "0" + month;
+  if (day.length < 2) day = "0" + day;
+
+  return [year, month, day].join("-");
 }
 
 function Chart({ coinId }: ICharProps) {
@@ -119,7 +135,7 @@ function Chart({ coinId }: ICharProps) {
                   labels: { show: false },
                   axisTicks: { show: false },
                   axisBorder: { show: false },
-                  categories: data?.map((price) => new Date(price.time_close * 1000)),
+                  categories: data?.map((price) => formatDate(new Date(price.time_close * 1000))),
                 },
                 yaxis: { labels: { show: false } },
                 stroke: { curve: "smooth", width: 3 },
@@ -150,7 +166,7 @@ function Chart({ coinId }: ICharProps) {
                   labels: { show: false },
                   axisTicks: { show: false },
                   axisBorder: { show: false },
-                  categories: data?.map((price) => new Date(price.time_close * 1000)),
+                  categories: data?.map((price) => formatDate(new Date(price.time_close * 1000))),
                 },
                 yaxis: { labels: { show: false } },
                 stroke: { curve: "smooth" },
